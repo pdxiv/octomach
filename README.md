@@ -1,5 +1,6 @@
 # octomach
-Simple virtual machine for genetic algorithm experiments. Uses an instruction set in the following format:
+Simple virtual machine for genetic algorithm experiments.
+## Instruction set
 
 Opcode | Mnemonic | Description
 ------ | -------- | -----------
