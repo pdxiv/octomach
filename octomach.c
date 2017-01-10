@@ -30,11 +30,15 @@ struct state_struct {
 };
 typedef struct state_struct state;
 
-void init_new_machine(state *machine_state) {
+void init_registers (state *machine_state) {
     machine_state->ip = 0;
     machine_state->no_halt = 1;
     machine_state->stack_pointer = 0;
     machine_state->n_register = 0;
+}
+
+void init_new_machine(state *machine_state) {
+    init_registers(machine_state);
     for (uint32_t t = 0; t < RAM_BLOCKS; t++) {
         machine_state->machine_ram[t] = rand() % 256;
     }
