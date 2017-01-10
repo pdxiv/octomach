@@ -62,56 +62,70 @@ uint32_t run_instruction(state *machine_state) {
     uint8_t opcode_tail = machine_state->machine_ram[machine_state->ip] & 0x0f;
     if (opcode_head < PARAMETER_OPCODES) {
         switch(opcode_head) {
-            case 0 :
-            case 1 :
-            case 2 :
-            case 3 :
-            case 4 :
-            case 5 :
-            case 6 :
-            case 7 :
-            case 8 :
-            case 9 :
-            case 10 :
-            case 11 :
-            case 12 :
-            case 13 :
-            case 14 :
+            case 0 : // ADR
+                break;
+            case 1 : // GOTO
+                break;
+            case 2 : // GOTOB
+                break;
+            case 3 : // GOTOF
+                break;
+            case 4 : // IFNZADR
+                break;
+            case 5 : // IFNZGOTO
+                break;
+            case 6 : // IFNZGOTOB
+                break;
+            case 7 : // IFNZGOTOF
+                break;
+            case 8 : // CP*NZ
+                break;
+            case 9 : // CPZ*N
+                break;
+            case 10 : // CPZN
+                break;
+            case 11 : // ADDNZ
+                break;
+            case 12 : // CLRZ
+                break;
+            case 13 : // CPIM
+                break;
+            case 14 : // SETN
                 break;
         }
     } else {
         switch(opcode_tail) {
-            case 0 :
+            case 0 : // PUSHN
                 break;
-            case 1 :
+            case 1 : // POPN
                 break;
-            case 2 :
+            case 2 : // PUSHZ
                 break;
-            case 3 :
+            case 3 : // POPZ
                 break;
-            case 4 :
+            case 4 : // PUSHA
                 break;
-            case 5 :
+            case 5 : // RETN
                 break;
-            case 6 :
+            case 6 : // DUP
                 break;
-            case 7 :
+            case 7 : // DROP
                 break;
-            case 8 :
+            case 8 : // INCN
                 break;
-            case 9 :
+            case 9 : // DECN
                 break;
-            case 10 :
+            case 10 : // SHLN
                 break;
-            case 11 :
+            case 11 : // SHRN
                 break;
-            case 12 :
+            case 12 : // SALN
                 break;
-            case 13 :
+            case 13 : // SARN
                 break;
-            case 14 :
+            case 14 : // NOTN
                 break;
-            case 15 :
+            case 15 : // HALT
                 machine_state->no_halt = 0;
                 printf("DEBUG: Halting execution at %d\n", machine_state->ip);
                 break;
@@ -126,7 +140,6 @@ uint32_t main(void) {
     srand(time(NULL));
     state machine_state;
     init_new_machine(&machine_state);
-    // dump_ram_data(&machine_state);
     while (machine_state.no_halt) {
         run_instruction(&machine_state);
     }
