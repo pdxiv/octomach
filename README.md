@@ -1,12 +1,14 @@
 # octomach
 Simple virtual machine for genetic algorithm experiments.
-## Registers
-Register | Function
+## Registers/memory
+Register/memory | Function
 -------- | --------
 IP | Instruction pointer
 Z0 - Z15 | Accumulator registers
 N | Accumulator reference register
 SP | Stack pointer
+NOHALT | Halts the machine if set to 0
+RAM | Main random access storage
 
 ## Instruction set
 Opcode | Mnemonic | Description | Reads | Writes
