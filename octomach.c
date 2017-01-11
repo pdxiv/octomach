@@ -66,70 +66,70 @@ uint32_t run_instruction(state *machine_state) {
     uint8_t opcode_tail = machine_state->machine_ram[machine_state->ip] & 0x0f;
     if (opcode_head < PARAMETER_OPCODES) {
         switch(opcode_head) {
-            case 0 : // ADR
+            case 0 : // mnemonic: ADR, reads: [], writes: []
                 break;
-            case 1 : // GOTO
+            case 1 : // mnemonic: GOTO, reads: [IP, RAM], writes: [IP]
                 break;
-            case 2 : // GOTOB
+            case 2 : // mnemonic: GOTOB, reads: [IP, RAM], writes: [IP]
                 break;
-            case 3 : // GOTOF
+            case 3 : // mnemonic: GOTOF, reads: [IP, RAM], writes: [IP]
                 break;
-            case 4 : // IFNZADR
+            case 4 : // mnemonic: IFNZADR, reads: [N, Z], writes: []
                 break;
-            case 5 : // IFNZGOTO
+            case 5 : // mnemonic: IFNZGOTO, reads: [IP, RAM], writes: [IP]
                 break;
-            case 6 : // IFNZGOTOB
+            case 6 : // mnemonic: IFNZGOTOB, reads: [IP, RAM], writes: [IP]
                 break;
-            case 7 : // IFNZGOTOF
+            case 7 : // mnemonic: IFNZGOTOF, reads: [IP, RAM], writes: [IP]
                 break;
-            case 8 : // CP*NZ
+            case 8 : // mnemonic: CP*NZ, reads: [N, RAM, Z], writes: [Z]
                 break;
-            case 9 : // CPZ*N
+            case 9 : // mnemonic: CPZ*N, reads: [N, Z], writes: [RAM]
                 break;
-            case 10 : // CPZN
+            case 10 : // mnemonic: CPZN, reads: [N, Z], writes: [Z]
                 break;
-            case 11 : // ADDNZ
+            case 11 : // mnemonic: ADDNZ, reads: [N, Z], writes: [Z]
                 break;
-            case 12 : // CLRZ
+            case 12 : // mnemonic: CLRZ, reads: [], writes: [Z]
                 break;
-            case 13 : // CPIM
+            case 13 : // mnemonic: CPIM, reads: [], writes: [Z]
                 break;
-            case 14 : // SETN
+            case 14 : // mnemonic: SETN, reads: [], writes: [N]
                 break;
         }
     } else {
         switch(opcode_tail) {
-            case 0 : // PUSHN
+            case 0 : // mnemonic: PUSHN, reads: [N, SP, Z], writes: [SP, STACK]
                 break;
-            case 1 : // POPN
+            case 1 : // mnemonic: POPN, reads: [N, SP, STACK, Z], writes: [SP]
                 break;
-            case 2 : // PUSHZ
+            case 2 : // mnemonic: PUSHZ, reads: [SP, Z], writes: [SP, STACK]
                 break;
-            case 3 : // POPZ
+            case 3 : // mnemonic: POPZ, reads: [SP, STACK], writes: [Z]
                 break;
-            case 4 : // PUSHA
+            case 4 : // mnemonic: PUSHA, reads: [IP, SP], writes: [SP, STACK]
                 break;
-            case 5 : // RETN
+            case 5 : // mnemonic: RETN, reads: [SP, STACK], writes: [IP, SP]
                 break;
-            case 6 : // DUP
+            case 6 : // mnemonic: DUP, reads: [SP, STACK], writes: [SP, STACK]
                 break;
-            case 7 : // DROP
+            case 7 : // mnemonic: DROP, reads: [SP], writes: [SP]
                 break;
-            case 8 : // INCN
+            case 8 : // mnemonic: INCN, reads: [N, Z], writes: [Z]
                 break;
-            case 9 : // DECN
+            case 9 : // mnemonic: DECN, reads: [N, Z], writes: [Z]
                 break;
-            case 10 : // SHLN
+            case 10 : // mnemonic: SHLN, reads: [N, Z], writes: [Z]
                 break;
-            case 11 : // SHRN
+            case 11 : // mnemonic: SHRN, reads: [N, Z], writes: [Z]
                 break;
-            case 12 : // SALN
+            case 12 : // mnemonic: SALN, reads: [N, Z], writes: [Z]
                 break;
-            case 13 : // SARN
+            case 13 : // mnemonic: SARN, reads: [N, Z], writes: [Z]
                 break;
-            case 14 : // NOTN
+            case 14 : // mnemonic: NOTN, reads: [N, Z], writes: [Z]
                 break;
-            case 15 : // HALT
+            case 15 : // mnemonic: HALT, reads: [], writes: [NOHALT]
                 machine_state->no_halt = 0;
                 printf("DEBUG: Halting execution at %d\n", machine_state->ip);
                 break;
@@ -149,35 +149,3 @@ uint32_t main(void) {
     }
     return 0;
 }
-
-// 0000LLLL    ADR        Declare L
-// 0001LLLL    GOTO       Goto L unidirectional
-// 0010LLLL    GOTOB      Goto L backward
-// 0011LLLL    GOTOF      Goto L forward
-// 0100LLLL    IFNZADR    If content of N != 0 THEN declare L
-// 0101LLLL    IFNZGOTO   If content of N != 0 THEN goto L unidirectional
-// 0110LLLL    IFNZGOTOB  If content of N != 0 THEN goto L backward
-// 0111LLLL    IFNZGOTOF  If content of N != 0 THEN goto L forward
-// 1000ZZZZ    CP*NZ      Copy content of address pointed to by N into Z
-// 1001ZZZZ    CPZ*N      Copy content of Z to address pointed to by N
-// 1010ZZZZ    CPZN       Copy Z into N
-// 1011ZZZZ    ADDNZ      Add N with Z and store in N
-// 1100ZZZZ    CLRZ       Clear Z
-// 1101ZZZZ    CPIM       Copy immediate value to Z
-// 1110ZZZZ    SETN       Set reference of N to Z
-// 11110000    PUSHN      Push N
-// 11110001    POPN       Pop N
-// 11110010    PUSHZ      Push all Z
-// 11110011    POPZ       Pop all Z
-// 11110100    PUSHA      Push IP+1
-// 11110101    RETN       Pop IP and go to address
-// 11110110    DUP        Duplicate top value on stack
-// 11110111    DROP       Drop top value on stack
-// 11111000    INCN       Increment N
-// 11111001    DECN       Decrement N
-// 11111010    SHLN       Shift N left
-// 11111011    SHRN       Shift N right
-// 11111100    SALN       Arithmetic shift N left
-// 11111101    SARN       Arithmetic shift N right
-// 11111110    NOTN       Negate N
-// 11111111    HALT       Stop execution
