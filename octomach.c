@@ -8,6 +8,10 @@
 #define RAM_BLOCKS 65536
 #define STACK_DEPTH 16
 #define Z_REGISTERS 16
+#define HIGHEST_NUMBER_IN_BYTE 256
+#define HIGHEST_NUMBER_IN_NYBBLE 16
+#define BITS_IN_NYBBLE 4
+
 
 char static *parameter_opcode_name[] = {
     "ADR", "GOTO", "GOTOB", "GOTOF", "IFNZADR", "IFNZGOTO", "IFNZGOTOB",
@@ -40,7 +44,24 @@ void init_registers (state *machine_state) {
 void init_new_machine(state *machine_state) {
     init_registers(machine_state);
     for (uint32_t t = 0; t < RAM_BLOCKS; t++) {
-        machine_state->machine_ram[t] = rand() % 256;
+        machine_state->machine_ram[t] = rand() % HIGHEST_NUMBER_IN_BYTE;
+    }
+}
+
+// Gives equal likelyhood for an opcode to occur, independent of the number of
+// bits it consists of.
+void fair_init_new_machine(state *machine_state) {
+    init_registers(machine_state);
+    for (uint32_t t = 0; t < RAM_BLOCKS; t++) {
+        uint32_t opcode_index = rand() % OPCODES;
+        uint32_t opcode_argument = rand() % HIGHEST_NUMBER_IN_NYBBLE;
+        if (opcode_head < PARAMETER_OPCODES) {
+            opcode_index = opcode_index << BITS_IN_NYBBLE;
+            machine_state->machine_ram[t] = opcode_index + opcode_argument;            
+        } else {
+            opcode_index = opcode_index - PARAMETER_OPCODES;            
+            machine_state->machine_ram[t] = 0b11110000 + opcode_index;
+        }
     }
 }
 
