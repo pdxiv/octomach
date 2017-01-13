@@ -15,10 +15,7 @@
 
 char static *parameter_opcode_name[] = {
     "ADR", "GOTO", "GOTOB", "GOTOF", "IFNZADR", "IFNZGOTO", "IFNZGOTOB",
-    "IFNZGOTOF", "CP*NZ", "CPZ*N", "CPZN", "ADDNZ", "CLRZ", "CPIM", "SETN"
-};
-
-char static *no_parameter_opcode_name[] = {
+    "IFNZGOTOF", "CP*NZ", "CPZ*N", "CPZN", "ADDNZ", "CLRZ", "CPIM", "SETN",
     "PUSHN", "POPN", "PUSHZ", "POPZ", "PUSHA", "RETN", "DUP", "DROP", "INCN",
     "DECN", "SHLN", "SHRN", "SALN", "SARN", "NOTN", "HALT"
 };
@@ -66,7 +63,7 @@ void print_instruction(state *machine_state, uint32_t address) {
     if (opcode_head < PARAMETER_OPCODES) {
         printf("%10s %2d\n", parameter_opcode_name[opcode_head], opcode_tail);
     } else {
-        printf("%10s\n", no_parameter_opcode_name[opcode_tail]);
+        printf("%10s\n", parameter_opcode_name[opcode_tail + PARAMETER_OPCODES]);
     }
 }
 
