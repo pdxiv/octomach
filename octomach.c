@@ -46,10 +46,12 @@ void init_new_machine(state *machine_state) {
     for (uint32_t t = 0; t < RAM_BLOCKS; t++) {
         uint32_t opcode_index = rand() % OPCODES;
         uint32_t opcode_argument = rand() % HIGHEST_NUMBER_IN_NYBBLE;
-        if (opcode_msn < PARAM_OPCODES) {
+        if (opcode_index < PARAM_OPCODES) {
+            // 4 bit opcode with argument
             opcode_index = opcode_index << BITS_IN_NYBBLE;
             machine_state->machine_ram[t] = opcode_index + opcode_argument;            
         } else {
+            // 8 bit opcode
             opcode_index = opcode_index - PARAM_OPCODES;            
             machine_state->machine_ram[t] = 0b11110000 + opcode_index;
         }
@@ -77,13 +79,9 @@ uint32_t run_instruction(state *machine_state) {
     uint8_t opcode_msn = machine_state->machine_ram[machine_state->ip] >> 4;
     uint8_t opcode_lsn = machine_state->machine_ram[machine_state->ip] & 0x0f;
     uint8_t opcode_index;
-    if (opcode_msn < PARAM_OPCODES) {
-        opcode_index = opcode_msn;
-    } else {
-        opcode_index = opcode_lsn + PARAM_OPCODES;
-    }
-    
-    switch(opcode_index) {
+
+    switch(opcode_lsn) {
+        // 4 bit opcodes below
         case 0 : // mnemonic: ADR, reads: [], writes: []
             break;
         case 1 : // mnemonic: GOTO, reads: [IP, RAM], writes: [IP]
@@ -114,40 +112,44 @@ uint32_t run_instruction(state *machine_state) {
             break;
         case 14 : // mnemonic: SETN, reads: [], writes: [N]
             break;
-        case 15 : // mnemonic: PUSHN, reads: [N, SP, Z], writes: [SP, STACK]
-            break;
-        case 16 : // mnemonic: POPN, reads: [N, SP, STACK, Z], writes: [SP]
-            break;
-        case 17 : // mnemonic: PUSHZ, reads: [SP, Z], writes: [SP, STACK]
-            break;
-        case 18 : // mnemonic: POPZ, reads: [SP, STACK], writes: [Z]
-            break;
-        case 19 : // mnemonic: PUSHA, reads: [IP, SP], writes: [SP, STACK]
-            break;
-        case 20 : // mnemonic: RETN, reads: [SP, STACK], writes: [IP, SP]
-            break;
-        case 21 : // mnemonic: DUP, reads: [SP, STACK], writes: [SP, STACK]
-            break;
-        case 22 : // mnemonic: DROP, reads: [SP], writes: [SP]
-            break;
-        case 23 : // mnemonic: INCN, reads: [N, Z], writes: [Z]
-            break;
-        case 24 : // mnemonic: DECN, reads: [N, Z], writes: [Z]
-            break;
-        case 25 : // mnemonic: SHLN, reads: [N, Z], writes: [Z]
-            break;
-        case 26 : // mnemonic: SHRN, reads: [N, Z], writes: [Z]
-            break;
-        case 27 : // mnemonic: SALN, reads: [N, Z], writes: [Z]
-            break;
-        case 28 : // mnemonic: SARN, reads: [N, Z], writes: [Z]
-            break;
-        case 29 : // mnemonic: NOTN, reads: [N, Z], writes: [Z]
-            break;
-        case 30 : // mnemonic: HALT, reads: [], writes: [NOHALT]
-            machine_state->no_halt = 0;
-            printf("DEBUG: Halting execution at %d\n", machine_state->ip);
-            break;
+        // 8 bit opcodes below
+        case 15 : 
+            switch(opcode_msn) {
+                case 0 : // mnemonic: PUSHN, reads: [N, SP, Z], writes: [SP, STACK]
+                    break;
+                case 1 : // mnemonic: POPN, reads: [N, SP, STACK, Z], writes: [SP]
+                    break;
+                case 2 : // mnemonic: PUSHZ, reads: [SP, Z], writes: [SP, STACK]
+                    break;
+                case 3 : // mnemonic: POPZ, reads: [SP, STACK], writes: [Z]
+                    break;
+                case 4 : // mnemonic: PUSHA, reads: [IP, SP], writes: [SP, STACK]
+                    break;
+                case 5 : // mnemonic: RETN, reads: [SP, STACK], writes: [IP, SP]
+                    break;
+                case 6 : // mnemonic: DUP, reads: [SP, STACK], writes: [SP, STACK]
+                    break;
+                case 7 : // mnemonic: DROP, reads: [SP], writes: [SP]
+                    break;
+                case 8 : // mnemonic: INCN, reads: [N, Z], writes: [Z]
+                    break;
+                case 9 : // mnemonic: DECN, reads: [N, Z], writes: [Z]
+                    break;
+                case 10 : // mnemonic: SHLN, reads: [N, Z], writes: [Z]
+                    break;
+                case 11 : // mnemonic: SHRN, reads: [N, Z], writes: [Z]
+                    break;
+                case 12 : // mnemonic: SALN, reads: [N, Z], writes: [Z]
+                    break;
+                case 13 : // mnemonic: SARN, reads: [N, Z], writes: [Z]
+                    break;
+                case 14 : // mnemonic: NOTN, reads: [N, Z], writes: [Z]
+                    break;
+                case 15 : // mnemonic: HALT, reads: [], writes: [NOHALT]
+                    machine_state->no_halt = 0;
+                    printf("DEBUG: Halting execution at %d\n", machine_state->ip);
+                    break;
+            }
         default :
             break;
     }
