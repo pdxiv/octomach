@@ -25,7 +25,7 @@ struct state_struct {
     uint32_t no_halt;
     uint32_t stack_pointer;
     uint32_t n_register;
-    uint32_t z_register[Z_REGISTERS];
+    int32_t z_register[Z_REGISTERS];
     uint8_t machine_ram[RAM_BLOCKS];
     uint32_t stack_data[STACK_DEPTH];
 };
@@ -36,6 +36,12 @@ void init_registers (state *machine_state) {
     machine_state->no_halt = 1;
     machine_state->stack_pointer = 0;
     machine_state->n_register = 0;
+    for (uint32_t t = 0; t < Z_REGISTERS; t++) {
+        machine_state->z_register[t] = 0;
+    }
+    for (uint32_t t = 0; t < STACK_DEPTH; t++) {
+        machine_state->stack_data[t] = 0;
+    }
 }
 
 // Randomly populate memory with populates RAM with random instructions.
@@ -49,10 +55,10 @@ void init_new_machine(state *machine_state) {
         if (opcode_index < PARAM_OPCODES) {
             // 4 bit opcode with argument
             opcode_index = opcode_index << BITS_IN_NYBBLE;
-            machine_state->machine_ram[t] = opcode_index + opcode_argument;            
+            machine_state->machine_ram[t] = opcode_index + opcode_argument;
         } else {
             // 8 bit opcode
-            opcode_index = opcode_index - PARAM_OPCODES;            
+            opcode_index = opcode_index - PARAM_OPCODES;
             machine_state->machine_ram[t] = 0b11110000 + opcode_index;
         }
     }
@@ -79,7 +85,6 @@ uint32_t run_instruction(state *machine_state) {
     uint8_t opcode_msn = machine_state->machine_ram[machine_state->ip] >> 4;
     uint8_t opcode_lsn = machine_state->machine_ram[machine_state->ip] & 0x0f;
     uint8_t opcode_index;
-
     switch(opcode_lsn) {
         // 4 bit opcodes below
         case 0 : // mnemonic: ADR, reads: [], writes: []
@@ -107,13 +112,19 @@ uint32_t run_instruction(state *machine_state) {
         case 11 : // mnemonic: ADDNZ, reads: [N, Z], writes: [Z]
             break;
         case 12 : // mnemonic: CLRZ, reads: [], writes: [Z]
+            machine_state->z_register[opcode_msn] = 0;
             break;
         case 13 : // mnemonic: CPIM, reads: [], writes: [Z]
+            for (uint8_t t = 0; t < 4; t++) {
+                machine_state->z_register[opcode_msn] = machine_state->z_register[opcode_msn] << 8;
+                machine_state->z_register[opcode_msn] += machine_state->machine_ram[machine_state->ip + t];
+            }
+            machine_state->ip += 4;
             break;
         case 14 : // mnemonic: SETN, reads: [], writes: [N]
             break;
         // 8 bit opcodes below
-        case 15 : 
+        case 15 :
             switch(opcode_msn) {
                 case 0 : // mnemonic: PUSHN, reads: [N, SP, Z], writes: [SP, STACK]
                     break;
