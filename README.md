@@ -1,6 +1,9 @@
 # octomach
+
 Simple virtual machine for genetic algorithm experiments.
+
 ## Registers/memory
+
 Register/memory | Function
 -------- | --------
 IP | Instruction pointer
@@ -11,6 +14,7 @@ NOHALT | Halts the machine if set to 0
 RAM | Main random access storage
 
 ## Instruction set
+
 Number | Opcode | Mnemonic | Description | Reads | Writes
 ------ | ------ | -------- | ----------- | ----- | ------
 0 | 0000LLLL | ADR | Declare L | |
