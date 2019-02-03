@@ -19,7 +19,7 @@ The instruction set can use a single predefined data type, which can be anything
 
 ## Instruction set jumps
 
-Instructions 0 to 7 deal with jumps.
+Instructions 0 to 7 deal with jumps. To go to a block of code, the jump destination label must first be declared with the "ADR" instruction. If an attempt is made to jump to an undefined label, (after searching the whole available address space, or up until search limit) the jump won't do anything and the next instruction will be executed.
 
 ## Instruction set specification
 
