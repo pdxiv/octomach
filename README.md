@@ -13,7 +13,15 @@ SP | Stack pointer
 NOHALT | Halts the machine if set to 0
 RAM | Main random access storage
 
-## Instruction set
+## Instruction set data type
+
+The instruction set can use a single predefined data type, which can be anything that fits within the boundary of one or more bytes following the "CPIM" (Copy Immediate) instruction.
+
+## Instruction set jumps
+
+Instructions 0 to 7 deal with jumps.
+
+## Instruction set specification
 
 Number | Opcode | Mnemonic | Description | Reads | Writes
 ------ | ------ | -------- | ----------- | ----- | ------
